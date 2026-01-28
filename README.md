@@ -37,7 +37,7 @@ A comprehensive Point of Sale (POS) API built with Go, featuring product and cat
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd kasir-api-2
+cd kasir-api
 ```
 
 ### 2. Install Dependencies
@@ -77,9 +77,7 @@ Connect to your database and run:
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    description VARCHAR(500)
 );
 
 -- Products Table
@@ -88,9 +86,7 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     price INTEGER NOT NULL,
     stock INTEGER NOT NULL DEFAULT 0,
-    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE
 );
 
 -- Create indexes for better query performance
@@ -517,7 +513,7 @@ curl -X DELETE http://localhost:8080/api/products/1
 ## 📁 Project Structure
 
 ```
-kasir-api-2/
+kasir-api/
 ├── main.go                      # Application entry point
 ├── go.mod                       # Go module definition
 ├── go.sum                       # Dependency checksums
