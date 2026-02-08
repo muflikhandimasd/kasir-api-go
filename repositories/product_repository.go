@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"kasir-api/models"
+	"strings"
 )
 
 type ProductRepository struct {
@@ -14,7 +15,7 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 	return &ProductRepository{db: db}
 }
 
-func (repo *ProductRepository) GetAll() ([]models.Product, error) {
+func (repo *ProductRepository) GetAll(name string) ([]models.Product, error) {
 	query := `SELECT
         p.id,
         p.name,
@@ -24,7 +25,13 @@ func (repo *ProductRepository) GetAll() ([]models.Product, error) {
         c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id`
-	rows, err := repo.db.Query(query)
+	var args []interface{}
+	if strings.TrimSpace(name) != "" {
+		query += " WHERE p.name ILIKE $1"
+		args = append(args, "%"+name+"%")
+	}
+
+	rows, err := repo.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
